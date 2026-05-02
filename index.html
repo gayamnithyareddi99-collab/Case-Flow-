@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Flow | B2B Invoice Dispute Resolution Platform for UK SMEs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+:root{
+  /* Case Flow Brand  Navy + Green */
+  --green:#2ECC71;
+  --green-light:#48D98A;
+  --green-dim:#27AE60;
+  --green-dark:#1A8745;
+
+  /* Dark Backgrounds */
+  --bg-black:#020C1B;
+  --bg-deep:#041226;
+  --bg-dark:#061830;
+  --bg-card:#0A1F3C;
+
+  /* Navy Accents */
+  --navy:#0B2347;
+  --navy-mid:#0E2E5E;
+  --navy-light:#123A75;
+  --navy-bright:#1A56B0;
+  --blue-accent:#1A56B0;
+  --blue-soft:#4B8EE8;
+  --blue-glow:rgba(26,86,176,0.15);
+
+  /* Light Sections */
+  --light-bg:#EEF4FB;
+  --light-card:#FFFFFF;
+  --light-border:#C8DDF4;
+  --text-dark:#030D1E;
+  --text-mid:#1A3558;
+  --text-muted:#456080;
+
+  /* Text on Dark */
+  --white:#FFFFFF;
+  --txt-secondary:#8AB5D0;
+  --txt-dim:#3A5E7A;
+
+  /* UI */
+  --card-bg:rgba(10,31,60,0.9);
+  --card-border:rgba(46,204,113,0.15);
+  --navy-card:rgba(11,35,71,0.8);
+  --navy-border:rgba(26,86,176,0.25);
+
+  --nav-h:72px;
+  --max-w:1200px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --display:'Sora',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --ease-out:cubic-bezier(0,0,0.2,1);
+}
+
+body{font-family:var(--font);color:var(--white);background:var(--bg-black);overflow-x:hidden;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg-black);}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px;}
+
+img{display:block;max-width:100%;}
+
+/* ─── NAVBAR ─────────────────────────────────────────── */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);
+  background:rgba(2,12,27,0.96);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(46,204,113,0.12);
+  z-index:1000;display:flex;align-items:center;
+  padding:0 clamp(16px,5vw,60px);
+  justify-content:space-between;
+  transition:border-color 0.3s;
+}
+.nav-logo{
+  font-family:var(--display);font-size:22px;font-weight:800;
+  color:var(--green);letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;text-decoration:none;flex-shrink:0;
+}
+.nav-logo-icon{
+  width:40px;height:40px;
+  background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 14px rgba(46,204,113,0.3);
+}
+.nav-logo-icon svg{width:22px;height:22px;}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+.nav-logo-text span{font-size:10px;font-family:var(--mono);font-weight:500;color:var(--txt-secondary);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links li button{
+  background:none;border:none;
+  color:var(--txt-secondary);
+  font-size:11px;font-weight:600;
+  padding:8px 16px;border-radius:7px;
+  transition:all 0.22s var(--ease);
+  cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;
+  position:relative;white-space:nowrap;
+}
+.nav-links li button:hover{color:var(--green);background:rgba(46,204,113,0.06);}
+.nav-links li button.active{color:var(--green);background:rgba(46,204,113,0.08);}
+.nav-links li button.active::after{
+  content:'';position:absolute;bottom:5px;left:50%;
+  transform:translateX(-50%);width:14px;height:2px;
+  background:var(--green);border-radius:2px;
+}
+
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo-nav{
+  background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:var(--bg-black);border:none;padding:9px 20px;border-radius:8px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  transition:all 0.22s;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(46,204,113,0.2);
+}
+.btn-demo-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(46,204,113,0.4);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;flex-shrink:0;}
+.hamburger span{width:22px;height:2px;background:var(--green);border-radius:2px;transition:0.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-nav{
+  display:none;position:fixed;top:var(--nav-h);left:0;width:100%;
+  background:rgba(2,12,27,0.99);backdrop-filter:blur(20px);
+  padding:12px 20px 20px;flex-direction:column;gap:2px;
+  z-index:999;border-bottom:1px solid rgba(46,204,113,0.1);
+  animation:slideDown 0.25s var(--ease-out);
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-nav.open{display:flex;}
+.mobile-nav button{
+  background:none;border:none;color:var(--txt-secondary);
+  font-size:13px;font-weight:600;padding:13px 12px;
+  border-bottom:1px solid rgba(46,204,113,0.06);
+  cursor:pointer;font-family:var(--mono);text-align:left;
+  text-transform:uppercase;letter-spacing:1px;
+  transition:color 0.2s,background 0.2s;border-radius:6px;
+}
+.mobile-nav button:hover{color:var(--green);background:rgba(46,204,113,0.05);}
+.mobile-nav .mob-cta{
+  margin-top:8px;background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:var(--bg-black);border:none;padding:13px;
+  border-radius:8px;font-weight:700;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  font-family:var(--mono);
+}
+
+/* ─── PAGE SYSTEM ─────────────────────────────────────── */
+.page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+.page.active{display:block;animation:pgIn 0.35s var(--ease);}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SECTION COMMONS ─────────────────────────────────── */
+.label-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--green);margin-bottom:14px;
+}
+.label-tag::before{content:'';width:20px;height:1px;background:var(--green);}
+
+.label-tag-blue{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue-soft);margin-bottom:14px;
+}
+.label-tag-blue::before{content:'';width:20px;height:1px;background:var(--blue-soft);}
+
+.section-h2{
+  font-family:var(--display);font-size:clamp(28px,3.5vw,52px);
+  font-weight:800;line-height:1.1;letter-spacing:-0.8px;
+  margin-bottom:10px;
+}
+.section-h2.green{color:var(--green);}
+.section-h2.dark{color:var(--text-dark);}
+.section-h2.white{color:var(--white);}
+.section-h2.navy-txt{color:var(--navy-light);}
+
+.section-divider{width:56px;height:3px;margin:16px 0 28px;border-radius:2px;}
+.divider-green{background:linear-gradient(90deg,var(--green),transparent);}
+.divider-blue{background:linear-gradient(90deg,var(--blue-accent),transparent);}
+.divider-center{margin:16px auto 28px;}
+
+.para-dark{color:var(--txt-secondary);line-height:1.85;font-size:17px;}
+.para-light{color:var(--text-mid);line-height:1.85;font-size:17px;}
+
+.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+
+/* ─── BUTTONS ─────────────────────────────────────────── */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:var(--bg-black);padding:13px 28px;border-radius:8px;
+  text-decoration:none;font-weight:700;font-size:12px;
+  letter-spacing:0.8px;text-transform:uppercase;
+  transition:all 0.25s;font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(46,204,113,0.25);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(46,204,113,0.4);}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid rgba(46,204,113,0.4);color:var(--green);
+  padding:12px 28px;border-radius:8px;text-decoration:none;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);background:none;cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(46,204,113,0.07);border-color:var(--green);}
+
+.btn-blue{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue-accent);color:var(--white);
+  padding:12px 28px;border-radius:8px;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(26,86,176,0.3);
+}
+.btn-blue:hover{transform:translateY(-2px);background:#1445A0;box-shadow:0 8px 28px rgba(26,86,176,0.45);}
+
+/* ─── STATUS INDICATORS ─────────────────────────────── */
+.risk-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;font-family:var(--mono);letter-spacing:0.5px;
+}
+.risk-green{background:rgba(46,204,113,0.12);color:var(--green);border:1px solid rgba(46,204,113,0.3);}
+.risk-amber{background:rgba(255,186,0,0.12);color:#F5A623;border:1px solid rgba(255,186,0,0.25);}
+.risk-red{background:rgba(239,68,68,0.12);color:#EF4444;border:1px solid rgba(239,68,68,0.25);}
+.risk-blue{background:rgba(74,142,232,0.12);color:var(--blue-soft);border:1px solid rgba(74,142,232,0.25);}
+.risk-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ─── HERO ──────────────────────────────────────────────── */
+.hero{
+  position:relative;
+  padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,90px);
+  background:var(--bg-black);overflow:hidden;
+  min-height:calc(100vh - var(--nav-h));
+  display:flex;align-items:center;
+}
+.hero-noise{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+.hero-grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(46,204,113,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(46,204,113,0.04) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;z-index:0;
+}
+.hero-glow-1{
+  position:absolute;top:-200px;right:-100px;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(46,204,113,0.07) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+.hero-glow-2{
+  position:absolute;bottom:-150px;left:-100px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(26,86,176,0.08) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+.hero-inner{
+  max-width:var(--max-w);margin:0 auto;
+  padding:0 clamp(16px,4vw,60px);
+  display:grid;grid-template-columns:1.15fr 0.85fr;
+  gap:clamp(30px,5vw,80px);align-items:center;
+  position:relative;z-index:1;width:100%;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:9px;
+  background:rgba(46,204,113,0.07);
+  border:1px solid rgba(46,204,113,0.25);
+  color:var(--green);font-size:10px;font-weight:700;
+  letter-spacing:2.5px;padding:6px 14px 6px 10px;
+  border-radius:4px;text-transform:uppercase;
+  margin-bottom:20px;font-family:var(--mono);
+}
+.hero-badge-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--green);
+  animation:pulse-dot 1.6s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.35;transform:scale(0.55);}}
+
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(38px,4.5vw,68px);
+  line-height:1.06;font-weight:800;
+  letter-spacing:-1.5px;color:var(--white);
+  margin-bottom:10px;
+}
+.hero h1 .green{color:var(--green);}
+.hero h1 .blue{color:var(--blue-soft);}
+
+.hero-rule{
+  width:64px;height:3px;
+  background:linear-gradient(90deg,var(--green),rgba(26,86,176,0.6));
+  margin:20px 0 24px;border-radius:2px;
+}
+.hero-body{
+  color:var(--txt-secondary);font-size:clamp(14px,1.5vw,19px);
+  line-height:1.8;margin-bottom:36px;max-width:540px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* Score Card */
+.score-card{
+  background:linear-gradient(145deg,rgba(10,31,60,0.95),rgba(4,18,38,0.98));
+  border:1px solid rgba(46,204,113,0.2);border-radius:18px;
+  padding:32px;position:relative;overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,0.55),0 0 0 1px rgba(46,204,113,0.05);
+}
+.score-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),var(--blue-accent),transparent);
+}
+.score-card-label{
+  font-family:var(--mono);color:var(--green);
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;gap:8px;
+}
+.score-card-label::after{content:'';flex:1;height:1px;background:rgba(46,204,113,0.15);}
+.score-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.score-row:last-child{border-bottom:none;padding-bottom:0;}
+.score-icon{
+  width:30px;height:30px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:14px;
+}
+.score-icon.green-bg{background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.2);}
+.score-icon.blue-bg{background:rgba(26,86,176,0.1);border:1px solid rgba(26,86,176,0.2);}
+.score-icon.amber-bg{background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);}
+.score-lbl{color:var(--txt-secondary);font-size:13px;flex:1;font-weight:500;}
+.score-val{
+  font-family:var(--display);color:var(--white);
+  font-size:17px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.score-big{
+  margin-top:20px;padding-top:20px;
+  border-top:1px solid rgba(46,204,113,0.12);
+  display:flex;align-items:center;gap:18px;
+}
+.score-big-num{
+  font-family:var(--display);font-size:48px;font-weight:800;
+  color:var(--green);line-height:1;letter-spacing:-2px;
+}
+.score-big-info .label{color:var(--white);font-weight:700;font-size:15px;margin-bottom:6px;}
+.score-big-info .sub{display:flex;gap:6px;flex-wrap:wrap;}
+
+/* ─── STATS STRIP ─────────────────────────────────────── */
+.stats-strip{
+  background:linear-gradient(135deg,rgba(11,35,71,0.9),rgba(10,31,60,0.95));
+  border-top:1px solid rgba(46,204,113,0.1);
+  border-bottom:1px solid rgba(46,204,113,0.1);
+  padding:clamp(32px,5vw,52px) 0;
+}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(20px,3vw,48px);
+}
+.stat-blk{border-left:2px solid rgba(46,204,113,0.2);padding-left:20px;}
+.stat-blk:first-child{border-left:none;padding-left:0;}
+.stat-num{
+  display:block;font-family:var(--display);
+  font-size:clamp(28px,3.5vw,42px);font-weight:800;
+  color:var(--green);letter-spacing:-1px;line-height:1;
+  margin-bottom:8px;
+}
+.stat-txt{color:var(--txt-secondary);font-size:13px;line-height:1.55;margin-bottom:6px;}
+.stat-source{font-family:var(--mono);font-size:9px;color:var(--txt-dim);letter-spacing:1px;text-transform:uppercase;}
+
+/* ─── SECTION LIGHT (How It Works) ──────────────────────── */
+.section-light{
+  background:var(--light-bg);
+  padding:clamp(60px,8vw,100px) 0;
+}
+.process-intro{
+  max-width:680px;margin:0 auto 48px;text-align:center;
+}
+.process-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(16px,2.5vw,28px);
+}
+.process-card{
+  background:var(--light-card);border-radius:14px;
+  overflow:hidden;border:1px solid var(--light-border);
+  transition:transform 0.25s var(--ease),box-shadow 0.25s;
+}
+.process-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(11,35,71,0.12);}
+.process-card-img{
+  width:100%;height:160px;object-fit:cover;
+  background:linear-gradient(135deg,rgba(11,35,71,0.06),rgba(46,204,113,0.08));
+  display:flex;align-items:center;justify-content:center;
+  font-size:56px;
+}
+.process-card-body{padding:20px;}
+.step-tag{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--blue-accent);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.process-card h3{font-family:var(--display);color:var(--text-dark);font-size:17px;font-weight:700;margin-bottom:10px;}
+.process-card p{color:var(--text-muted);font-size:13.5px;line-height:1.65;}
+
+/* ─── SECTION DARK (Core Capabilities) ──────────────────── */
+.section-dark{
+  background:var(--bg-dark);
+  padding:clamp(60px,8vw,100px) 0;
+}
+.platform-sub{max-width:720px;margin-bottom:48px;}
+.platform-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,2.5vw,28px);
+}
+.platform-card{
+  background:var(--card-bg);border:1px solid rgba(46,204,113,0.12);
+  border-radius:16px;overflow:hidden;
+  transition:transform 0.25s var(--ease),border-color 0.25s,box-shadow 0.25s;
+}
+.platform-card:hover{transform:translateY(-4px);border-color:rgba(46,204,113,0.28);box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.platform-card-img{
+  width:100%;height:170px;object-fit:cover;
+  background:linear-gradient(135deg,rgba(11,35,71,0.5),rgba(46,204,113,0.08));
+  display:flex;align-items:center;justify-content:center;
+  font-size:64px;position:relative;overflow:hidden;
+}
+.platform-card-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 50%,var(--bg-card) 100%);
+}
+.platform-card .inner{padding:22px 24px 24px;}
+.element-badge{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--green);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:10px;padding:3px 8px;
+  background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);
+  border-radius:4px;display:inline-block;
+}
+.platform-card h3{font-family:var(--display);color:var(--white);font-size:18px;font-weight:700;margin-bottom:10px;}
+.platform-card p{color:var(--txt-secondary);font-size:14px;line-height:1.7;}
+.more-text{
+  color:var(--txt-dim);font-size:13px;line-height:1.65;
+  margin-top:14px;max-height:0;overflow:hidden;
+  transition:max-height 0.4s var(--ease);
+}
+.platform-card.open .more-text{max-height:300px;}
+.expand-btn{
+  margin-top:16px;background:none;border:1px solid rgba(46,204,113,0.25);
+  color:var(--green);padding:7px 16px;border-radius:6px;
+  font-size:11px;font-weight:600;cursor:pointer;
+  font-family:var(--mono);letter-spacing:0.5px;
+  transition:all 0.2s;
+}
+.expand-btn:hover{background:rgba(46,204,113,0.08);}
+
+/* ─── ABOUT PAGE ────────────────────────────────────────── */
+.about-hero{
+  padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,100px);
+  background:var(--bg-black);
+}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(40px,6vw,80px);align-items:start;
+}
+.about-para{
+  color:var(--txt-secondary);font-size:16px;line-height:1.8;margin-bottom:18px;
+}
+.about-tags{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  margin-top:28px;
+}
+.feature-tag{
+  background:rgba(46,204,113,0.06);border:1px solid rgba(46,204,113,0.18);
+  color:var(--green);font-size:12px;font-weight:600;
+  padding:9px 14px;border-radius:7px;font-family:var(--mono);
+  letter-spacing:0.3px;
+}
+.founder-card{
+  background:var(--card-bg);border:1px solid rgba(46,204,113,0.15);
+  border-radius:16px;padding:28px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.founder-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),transparent);
+}
+.founder-tag{
+  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--green);margin-bottom:10px;
+}
+.founder-card h4{font-family:var(--display);color:var(--white);font-size:20px;font-weight:700;margin-bottom:4px;}
+.founder-title{color:var(--txt-secondary);font-size:13px;margin-bottom:14px;font-weight:500;}
+.founder-card p{color:var(--txt-dim);font-size:14px;line-height:1.7;margin-bottom:12px;}
+.founder-card p:last-child{margin-bottom:0;}
+
+/* ─── PLATFORM PAGE ─────────────────────────────────────── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,2vw,20px);margin-bottom:40px;}
+.kpi-card{
+  background:var(--card-bg);border:1px solid rgba(46,204,113,0.12);
+  border-radius:12px;padding:20px 18px;text-align:center;
+  transition:border-color 0.25s;
+}
+.kpi-card:hover{border-color:rgba(46,204,113,0.28);}
+.kpi-num{font-family:var(--display);font-size:clamp(26px,3vw,38px);font-weight:800;color:var(--green);letter-spacing:-1px;margin-bottom:6px;}
+.kpi-lbl{color:var(--txt-secondary);font-size:12px;font-family:var(--mono);letter-spacing:0.5px;}
+
+/* ─── MARKET PAGE ────────────────────────────────────────── */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,28px);margin-bottom:28px;}
+.chart-card{
+  background:var(--card-bg);border:1px solid rgba(46,204,113,0.1);
+  border-radius:14px;padding:22px;
+}
+.chart-card-full{
+  background:var(--card-bg);border:1px solid rgba(46,204,113,0.1);
+  border-radius:14px;padding:22px;margin-bottom:28px;
+}
+.chart-title{font-family:var(--display);color:var(--white);font-size:16px;font-weight:700;margin-bottom:4px;}
+.chart-sub{color:var(--txt-dim);font-size:12px;font-family:var(--mono);margin-bottom:16px;}
+.chart-wrap{height:240px;position:relative;}
+.chart-wrap-lg{height:360px;position:relative;}
+
+.market-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px);margin-bottom:36px;}
+.mkt-card{
+  background:linear-gradient(145deg,var(--card-bg),rgba(11,35,71,0.5));
+  border:1px solid rgba(26,86,176,0.2);border-radius:12px;padding:20px;
+}
+.mkt-num{font-family:var(--display);font-size:clamp(28px,3vw,40px);font-weight:800;color:var(--blue-soft);letter-spacing:-1px;margin-bottom:6px;}
+.mkt-lbl{color:var(--txt-secondary);font-size:13px;line-height:1.5;}
+.mkt-source{font-family:var(--mono);font-size:9px;color:var(--txt-dim);letter-spacing:1px;text-transform:uppercase;margin-top:8px;}
+
+/* ─── PRICING PAGE ───────────────────────────────────────── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.5vw,28px);margin-bottom:56px;}
+.price-card{
+  background:var(--card-bg);border:1px solid rgba(46,204,113,0.12);
+  border-radius:16px;padding:30px;position:relative;
+  transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;
+}
+.price-card:hover{transform:translateY(-4px);border-color:rgba(46,204,113,0.25);box-shadow:0 16px 48px rgba(0,0,0,0.3);}
+.price-card.featured{
+  border-color:var(--green);
+  box-shadow:0 0 0 1px rgba(46,204,113,0.15),0 24px 60px rgba(0,0,0,0.35);
+  background:linear-gradient(145deg,rgba(10,31,60,0.97),rgba(11,35,71,0.95));
+}
+.price-card.featured::before{
+  content:'MOST POPULAR';position:absolute;top:-1px;left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:var(--bg-black);font-size:9px;font-weight:700;
+  font-family:var(--mono);letter-spacing:2px;
+  padding:4px 16px;border-radius:0 0 8px 8px;
+}
+.price-tier{font-family:var(--mono);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.price-card h3{font-family:var(--display);color:var(--white);font-size:22px;font-weight:800;margin-bottom:10px;}
+.price-card .desc{color:var(--txt-secondary);font-size:13px;line-height:1.6;margin-bottom:20px;}
+.price-amount{font-family:var(--display);font-size:clamp(36px,4vw,52px);font-weight:800;color:var(--white);letter-spacing:-2px;}
+.price-period{font-family:var(--mono);font-size:10px;color:var(--txt-dim);letter-spacing:1px;margin-bottom:24px;margin-top:4px;}
+.price-divider{height:1px;background:rgba(46,204,113,0.1);margin-bottom:22px;}
+.price-features{list-style:none;margin-bottom:28px;}
+.price-features li{
+  color:var(--txt-secondary);font-size:13.5px;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;align-items:center;gap:10px;
+}
+.price-features li:last-child{border-bottom:none;}
+.chk{color:var(--green);font-weight:700;flex-shrink:0;}
+.price-btn{
+  width:100%;padding:13px;border-radius:8px;
+  font-family:var(--mono);font-size:12px;font-weight:700;
+  letter-spacing:0.8px;text-transform:uppercase;cursor:pointer;transition:all 0.25s;border:none;
+}
+.price-btn-outline{
+  background:none;border:1.5px solid rgba(46,204,113,0.35);color:var(--green);
+}
+.price-btn-outline:hover{background:rgba(46,204,113,0.07);}
+.price-btn-green{
+  background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:var(--bg-black);box-shadow:0 4px 16px rgba(46,204,113,0.3);
+}
+.price-btn-green:hover{box-shadow:0 8px 28px rgba(46,204,113,0.45);transform:translateY(-1px);}
+
+/* ─── FAQ ────────────────────────────────────────────────── */
+.faq-wrap{margin-bottom:48px;}
+.faq-item{
+  border-bottom:1px solid rgba(46,204,113,0.08);
+  padding:20px 0;
+}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;gap:20px;
+}
+.faq-q h4{font-family:var(--display);color:var(--white);font-size:16px;font-weight:600;}
+.faq-icon{
+  color:var(--green);font-size:22px;font-weight:300;
+  flex-shrink:0;transition:transform 0.25s;
+}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-body{
+  color:var(--txt-secondary);font-size:14.5px;line-height:1.75;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.35s var(--ease),padding 0.35s;
+}
+.faq-item.open .faq-body{max-height:300px;padding-top:14px;}
+
+/* ─── CONTACT ────────────────────────────────────────────── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:start;}
+.contact-left-para{color:var(--txt-secondary);font-size:15px;line-height:1.75;margin-bottom:16px;}
+.contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;}
+.contact-icon{
+  width:40px;height:40px;background:rgba(46,204,113,0.08);
+  border:1px solid rgba(46,204,113,0.2);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.contact-item-text strong{display:block;color:var(--white);font-size:13px;margin-bottom:2px;}
+.contact-item-text span{color:var(--txt-secondary);font-size:13px;}
+.contact-form-card{
+  background:var(--card-bg);border:1px solid rgba(46,204,113,0.15);
+  border-radius:16px;padding:36px;position:relative;overflow:hidden;
+}
+.contact-form-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),var(--blue-accent),transparent);
+}
+.contact-form-card h3{font-family:var(--display);color:var(--white);font-size:22px;font-weight:800;margin-bottom:24px;}
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--txt-dim);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.form-ctrl{
+  width:100%;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(46,204,113,0.2);border-radius:8px;
+  padding:12px 16px;color:var(--white);font-size:14px;
+  font-family:var(--font);transition:all 0.25s;outline:none;
+}
+.form-ctrl::placeholder{color:var(--txt-dim);}
+.form-ctrl:focus{border-color:rgba(46,204,113,0.5);background:rgba(46,204,113,0.03);}
+.form-ctrl option{background:var(--bg-card);}
+.ta{resize:vertical;min-height:90px;}
+.form-submit{
+  width:100%;background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:var(--bg-black);border:none;padding:14px;border-radius:8px;
+  font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;cursor:pointer;transition:all 0.25s;
+}
+.form-submit:hover{box-shadow:0 6px 20px rgba(46,204,113,0.35);transform:translateY(-1px);}
+#formSuccess{
+  display:none;margin-top:16px;background:rgba(46,204,113,0.1);
+  border:1px solid rgba(46,204,113,0.3);border-radius:8px;
+  padding:14px;color:var(--green);font-size:13px;text-align:center;
+  font-family:var(--mono);
+}
+
+/* ─── FOOTER ───────────────────────────────────────────── */
+footer{background:var(--bg-black);border-top:1px solid rgba(46,204,113,0.1);padding:clamp(40px,6vw,80px) 0 28px;}
+.footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:clamp(30px,5vw,80px);margin-bottom:40px;}
+.footer-logo{font-family:var(--display);color:var(--green);font-size:22px;font-weight:800;display:block;margin-bottom:14px;}
+.footer-brand p{color:var(--txt-dim);font-size:13px;line-height:1.75;}
+.footer-col h5{font-family:var(--mono);color:var(--white);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;}
+.footer-col a{display:block;color:var(--txt-dim);font-size:13px;margin-bottom:10px;cursor:pointer;transition:color 0.2s;}
+.footer-col a:hover{color:var(--green);}
+.footer-bottom{border-top:1px solid rgba(46,204,113,0.08);padding-top:20px;display:flex;flex-direction:column;gap:4px;}
+.footer-bottom p{color:var(--txt-dim);font-size:12px;font-family:var(--mono);}
+.footer-bottom span{color:var(--green);}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(min-width:1400px){
+  :root{--max-w:1300px;}
+  .hero h1{font-size:72px;}
+  .hero-body{font-size:20px;max-width:580px;}
+  .section-h2{font-size:54px;}
+  .para-dark,.para-light{font-size:18px;}
+  .stat-num{font-size:46px;}
+  .process-card-img{height:180px;}
+  .platform-card-img{height:200px;}
+  .chart-wrap{height:300px;}
+  .chart-wrap-lg{height:420px;}
+  .score-big-num{font-size:52px;}
+}
+@media(max-width:900px){
+  .platform-grid{grid-template-columns:repeat(2,1fr);}
+  .pricing-grid{grid-template-columns:1fr 1fr;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .market-kpi{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .nav-links,.nav-right .btn-demo-nav{display:none;}
+  .hamburger{display:flex;}
+  .nav-right{gap:0;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-inner>div:last-child{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .process-grid{grid-template-columns:repeat(2,1fr);}
+  .platform-grid{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+  .kpi-card{padding:16px 12px;}
+  .charts-grid{grid-template-columns:1fr;gap:16px;margin-bottom:16px;}
+  .chart-card{padding:16px;}
+  .chart-card-full{padding:16px;margin-bottom:16px;}
+  .chart-wrap{height:200px;}
+  .chart-wrap-lg{height:260px;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .market-kpi{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .process-grid{grid-template-columns:1fr;}
+  .kpi-row{grid-template-columns:1fr;}
+  .about-tags{grid-template-columns:1fr;}
+  .chart-wrap{height:180px;}
+  .chart-wrap-lg{height:220px;}
+  .chart-title{font-size:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar">
+  <a class="nav-logo" href="#" onclick="showPage('home');return false;">
+    
+    <!-- ❌ Removed nav-logo-icon (SVG) -->
+
+    <div class="nav-logo-text">Case Flow<span>Dispute Resolution</span></div>
+  </a>
+
+  <ul class="nav-links">
+    <li><button id="nav-home" class="active" onclick="showPage('home')">Home</button></li>
+    <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+    <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+    <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+    <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+    <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="btn-demo-nav" onclick="showPage('contact')">Book a Demo</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button onclick="showPage('home');closeMobile()">Home</button>
+  <button onclick="showPage('about');closeMobile()">About</button>
+  <button onclick="showPage('platform');closeMobile()">Platform</button>
+  <button onclick="showPage('market');closeMobile()">Market</button>
+  <button onclick="showPage('pricing');closeMobile()">Pricing</button>
+  <button onclick="showPage('contact');closeMobile()">Contact</button>
+  <button class="mob-cta" onclick="showPage('contact');closeMobile()">Book a Demo →</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: HOME
+═══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-noise"></div>
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          UK's First B2B Invoice Dispute Resolution SaaS Platform
+        </div>
+        <h1>Resolve. <span class="green">Evidence.</span><br><span class="blue">Prevent.</span></h1>
+        <div class="hero-rule"></div>
+        <p class="hero-body">Case Flow transforms fragmented invoice dispute records into structured, audit-ready evidence packs  helping UK SMEs resolve B2B disputes faster, recover payments professionally, and prevent recurring commercial conflicts through evidence-based workflows.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Book a Demo →</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+        </div>
+      </div>
+      <div>
+        <div class="score-card">
+          <div class="score-card-label">Live Dispute Resolution Monitor</div>
+          <div class="score-row">
+            <div class="score-icon green-bg">📋</div>
+            <span class="score-lbl">Evidence Sufficiency Score</span>
+            <span class="score-val">94%</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">🔗</div>
+            <span class="score-lbl">Claim-Provenance Links Active</span>
+            <span class="score-val">87/92</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon amber-bg">⚠️</div>
+            <span class="score-lbl">Missing Document Flags</span>
+            <span class="score-val">3 <span class="risk-badge risk-amber"><span class="risk-dot"></span>Review</span></span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon green-bg">🛡️</div>
+            <span class="score-lbl">GDPR Compliance Status</span>
+            <span class="score-val"><span class="risk-badge risk-green"><span class="risk-dot"></span>Compliant</span></span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">⏱️</div>
+            <span class="score-lbl">Avg. Resolution Time Saved</span>
+            <span class="score-val">&lt; 72 hrs</span>
+          </div>
+          <div class="score-big">
+            <div class="score-big-num">91</div>
+            <div class="score-big-info">
+              <div class="label">Case Readiness Score</div>
+              <div class="sub"><span class="risk-badge risk-green"><span class="risk-dot"></span>Pack Ready · Negotiation Stage</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-blk">
+          <span class="stat-num">£22K</span>
+          <div class="stat-txt">Annual loss per UK SME<br>due to invoice dispute friction</div>
+          <span class="stat-source">Dept. for Business & Trade 2024</span>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">52%</span>
+          <div class="stat-txt">UK SMEs received late payments<br>within 3 months in 2022</div>
+          <span class="stat-source">Federation of Small Businesses</span>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">£11bn</span>
+          <div class="stat-txt">Annual cost to the UK economy<br>from late payment disputes</div>
+          <span class="stat-source">Small Business Commissioner</span>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">£59</span>
+          <div class="stat-txt">Entry SaaS price per month <br>full dispute workflow access</div>
+          <span class="stat-source">Case Flow Starter Plan</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="section-light">
+    <div class="container">
+      <div class="process-intro">
+        <div class="label-tag-blue">How It Works</div>
+        <h2 class="section-h2 dark">From Fragmented Records to Audit-Ready Resolution in Hours</h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-light">Every Case Flow deployment follows a proven four-stage dispute resolution journey  from evidence ingestion and root-cause classification, to evidence graph construction, timeline reconstruction, and professional resolution pack generation  all without requiring legal expertise from your finance or operations team.</p>
+      </div>
+      <div class="process-grid">
+        <div class="process-card">
+          <div class="process-card-img">
+            <img src="case2.jpg" alt="Upload & Ingest Evidence" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 01</div>
+            <h3>Upload &amp; Ingest</h3>
+            <p>Import invoices, purchase orders, contracts, delivery notes and email exports. Structured capture with completeness checks ensures no critical document is missed.</p>
+          </div>
+        </div>
+        <div class="process-card">
+          <div class="process-card-img">
+            <img src="case3.jpg" alt="Classify & Map Root Cause" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 02</div>
+            <h3>Classify &amp; Map</h3>
+            <p>Our root-cause taxonomy automatically assigns dispute categories  price mismatch, quality claim, missing PO  and generates the required evidence checklist for each type.</p>
+          </div>
+        </div>
+        <div class="process-card">
+          <div class="process-card-img">
+            <img src="case4.jpg" alt="Build Evidence Timeline" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 03</div>
+            <h3>Build Timeline</h3>
+            <p>The Evidence Graph links every document to claims and events, building a single chronological "version of facts" that automatically flags missing artefacts and contradictions.</p>
+          </div>
+        </div>
+        <div class="process-card">
+          <div class="process-card-img">
+            <img src="case5.jpg" alt="Generate Resolution Pack" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 04</div>
+            <h3>Resolve &amp; Prevent</h3>
+            <p>Generate a professional Resolution Package with quantified commercial settlement options. Closed disputes convert into operational controls that prevent future occurrences.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE CAPABILITIES -->
+  <section class="section-dark">
+    <div class="container">
+      <div class="label-tag">Core Capabilities</div>
+      <h2 class="section-h2 white">Five Engines. One Dispute Intelligence Layer.</h2>
+      <div class="section-divider divider-green"></div>
+      <p class="para-dark platform-sub">Case Flow combines five proprietary workflow modules into a single dispute resolution operating system  the only platform that unifies evidence ingestion, claim-level provenance modelling, automated timeline construction, sufficiency scoring, and prevention controls into one audit-ready resolution infrastructure for UK SMEs.</p>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case6.jpg" alt="Evidence Ingestion Engine" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Engine 01</div>
+            <h3>Evidence Ingestion Engine</h3>
+            <p>Upload invoices, POs, contracts, delivery notes, email exports and photos. Structured capture with human-reviewed completeness checks ensures nothing critical is overlooked before resolution begins.</p>
+            <div class="more-text">CSV invoice import for bulk dispute onboarding. Metadata capture with document-type classification. Provenance tagging links each artefact to the specific claim it supports or refutes  creating machine-readable evidence relationships from day one.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case7.jpg" alt="Claim-Level Provenance Spine" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Engine 02</div>
+            <h3>Claim-Level Provenance Spine</h3>
+            <p>Our proprietary data architecture organises every dispute as a logical relationship network  Claims → Events → Artefacts. Unlike file attachment systems, every claim is traced to specific operational evidence with full provenance mapping.</p>
+            <div class="more-text">Machine-readable evidence index with version history and optional file hashing for integrity verification. Contradictions are surfaced explicitly rather than buried in document bundles  forcing structured resolution steps and eliminating interpretive ambiguity.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case8.jpg" alt="Evidence Sufficiency Scoring" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Engine 03</div>
+            <h3>Evidence Sufficiency Scoring</h3>
+            <p>Unlike AI tools that predict dispute outcomes, Case Flow measures evidence completeness. Each dispute type carries defined evidentiary requirements  the system scores how well current evidence meets those standards, quantifying gaps before negotiation begins.</p>
+            <div class="more-text">Rule-based sufficiency assessment for 12+ dispute root-cause categories including price mismatch, delivery variance, quality claims, missing POs, and acceptance disputes. Completeness scores allow finance teams to strengthen their position before any counterparty engagement.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page home -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: ABOUT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <div class="label-tag">Our Mission</div>
+          <h2 class="section-h2 green">Dispute Resolution Built from Operational Finance Reality</h2>
+          <div class="section-divider divider-green"></div>
+          <p class="about-para">Case Flow was born from a critical, observed failure: UK SMEs manage invoice disputes using fragmented emails, unstructured spreadsheets, and ad hoc communication  with no systematic way to consolidate evidence, validate claims, or reconstruct what actually happened between contracting parties.</p>
+          <p class="about-para">Our platform transforms dispute management from a reactive, informal process into an auditable, repeatable workflow. We don't just store documents  we model the relationship between every claim and the specific evidence required to prove or refute it, creating a single, verifiable "version of the facts" that accelerates commercial settlement.</p>
+          <p class="about-para">Founded by a finance and compliance operations professional with direct experience managing complex documentation, regulatory adherence, and evidence-based case management in the UK professional environment  Case Flow is domain expertise encoded into structured workflow software, built specifically for the 5.5 million SMEs operating in the UK market.</p>
+          <div class="about-tags">
+            <div class="feature-tag">Claim-Level Provenance Spine</div>
+            <div class="feature-tag">Root-Cause Dispute Taxonomy</div>
+            <div class="feature-tag">Evidence Sufficiency Scoring</div>
+            <div class="feature-tag">Resolution Package Generator</div>
+            <div class="feature-tag">Dispute-to-Control Conversion</div>
+            <div class="feature-tag">Legal-Safe Template Architecture</div>
+            <div class="feature-tag">UK GDPR · Data Sovereignty</div>
+            <div class="feature-tag">Copyright & Trade Secret Protected</div>
+          </div>
+        </div>
+        <div>
+          <div class="founder-card">
+  <div class="founder-tag">Founder &amp; CEO</div>
+  <h4>Neelam Kumari</h4>
+  <div class="founder-title">Finance & Operations Architect · Platform Lead</div>
+
+  <p>MSc Finance graduate from Manchester Metropolitan University with over 3 years of cross-functional experience spanning financial analysis, compliance operations, and structured documentation management in UK professional environments. Currently leading Case Flow from product concept through MVP validation and commercial launch.</p>
+
+  <p>Neelam's background managing compliance-related records, systematic case processes, audit-ready documentation, and stakeholder coordination directly mirrors the operational discipline required to design Case Flow's dispute-reconstruction workflows. Her expertise in financial document reconciliation, CRM systems, and data integrity forms the analytical backbone of the platform's evidence architecture.</p>
+
+  <!-- ✅ Contact Button -->
+  <button class="btn-primary" onclick="showPage('contact')">
+    Contact Founder →
+  </button>
+</div>
+
+          <<div class="founder-card">
+  <div class="founder-tag">Growing the Team · Phase 2</div>
+  <h4>Strategic UK Hires</h4>
+  <div class="founder-title">Capability-Based Recruitment Plan</div>
+
+  <p>Case Flow is building its core team through a staged recruitment strategy: a Full-Stack Software Engineer to accelerate product development and platform scalability; a Customer Success Manager to drive SME onboarding and retention; and a Sales &amp; Partnerships Lead focused on UK accountancy firm distribution networks.</p>
+
+  <p>All hires are UK-based, aligned with the Government's SME growth agenda and the UK's expanding legal-tech and fintech ecosystem. Year 3 expansion targets data analytics, international business development, and product management capabilities as the platform scales toward 450+ active customers.</p>
+
+  <!-- ✅ Market Button -->
+  <button class="btn-blue" onclick="showPage('market')">
+    View Market Opportunity →
+  </button>
+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page about -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PLATFORM
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-platform">
+  <section class="section-dark" style="padding-top:clamp(80px,12vw,120px);">
+    <div class="container">
+      <div class="label-tag">The Platform</div>
+      <h2 class="section-h2 white">Every Layer of Case Flow's Dispute Intelligence</h2>
+      <div class="section-divider divider-green"></div>
+      <p class="para-dark platform-sub">Case Flow is a cloud-native B2B SaaS platform built on a modular architecture  React-based evidence dashboards, FastAPI dispute workflow backend, structured provenance data model, and UK GDPR-compliant cloud infrastructure  designed to serve SMEs, finance teams, and accountancy practices without requiring legal expertise on-site.</p>
+
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-num">&lt;1mo</div>
+          <div class="kpi-lbl">Payback period · CAC recovery</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">83%</div>
+          <div class="kpi-lbl">Gross margin · Year 1</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">£8K</div>
+          <div class="kpi-lbl">Customer LTV · 5yr estimate</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">12+</div>
+          <div class="kpi-lbl">Dispute root-cause categories</div>
+        </div>
+      </div>
+
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case9.jpg" alt="Evidence Ingestion Module" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 01</div>
+            <h3>Evidence Ingestion &amp; Normalisation</h3>
+            <p>Upload invoices, POs, contracts, delivery notes, email exports and photos via drag-and-drop or CSV bulk import. Human-reviewed completeness checks flag missing artefacts before the workflow progresses.</p>
+            <div class="more-text">Metadata capture with automated document-type classification. Structured import templates eliminate manual data entry errors. The ingestion layer converts raw commercial documents into structured, claim-linkable artefacts  the foundational layer of the provenance architecture.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case10.jpg" alt="Dispute Taxonomy Engine" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 02</div>
+            <h3>Root-Cause Dispute Taxonomy Engine</h3>
+            <p>Standard reason codes  price mismatch, quantity variance, quality claim, missing PO, acceptance dispute  each mapping automatically to required evidence checklists, workflow steps, and resolution output structure.</p>
+            <div class="more-text">Classification acts as an operational compiler rather than a simple label. The taxonomy drives what evidence is collected, how the case progresses, and what format the resolution pack takes  eliminating personal judgement and creating consistency across disputes, staff, and clients.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case11.jpg" alt="Evidence Graph Architecture" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 03</div>
+            <h3>Evidence Graph &amp; Provenance Spine</h3>
+            <p>Machine-readable model linking Documents → Events → Claims, creating provable provenance chains. Surfaces contradictions explicitly, forcing structured resolution steps and eliminating interpretive ambiguity between parties.</p>
+            <div class="more-text">Version history with optional file hashing for document integrity verification. Immutable audit trail of all case actions and evidence submissions. The provenance spine is the core innovation  a data architecture that has no direct equivalent in existing UK SME software categories.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case12.jpg" alt="Timeline Builder" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 04</div>
+            <h3>Chronological Timeline Builder</h3>
+            <p>Automatically constructs a "single version of events" from contract execution through to dispute notice. Flags missing artefacts and contradictory data points in real-time as documents are linked to the timeline.</p>
+            <div class="more-text">Chronological ordering is automatic, with manual override capability for complex disputed sequences. Each timeline entry is linked to its evidentiary source documents, making the final pack fully traceable and audit-ready for mediators, accountants, or commercial negotiators.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case13.jpg" alt="Resolution Package Generator" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 05</div>
+            <h3>Resolution Package Generator</h3>
+            <p>Structured output pack: factual dispute summary, versioned evidence index, quantified commercial settlement options (partial payment, credit adjustment, staged settlement, re-performance), and template counterparty communications.</p>
+            <div class="more-text">Legal-safe templates enforce factual documentation over interpretation  allowing finance and operations staff to generate professional-grade resolution materials without inadvertently providing legal advice. Outputs are negotiation-ready and escalation-prepared commercial documents, not legal instruments.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <img src="case14.jpg" alt="Prevention Control Library" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 06</div>
+            <h3>Dispute-to-Control Prevention Engine</h3>
+            <p>Closed dispute data is analysed to extract root causes and evidence gaps, which are automatically converted into preventive operational controls  e.g., require delivery proof before invoicing, mandate PO reference on all orders.</p>
+            <div class="more-text">Over time, the prevention engine creates a feedback loop where resolved disputes actively reduce the number of future disputes. This is the only tool in the UK SME market that transforms dispute history into enforceable operational improvement intelligence  making dispute management a continuous improvement process, not a reactive cost.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page platform -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: MARKET
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-market">
+  <section class="section-dark" style="padding-top:clamp(80px,12vw,120px);">
+    <div class="container">
+      <div class="label-tag">Market Analysis</div>
+      <h2 class="section-h2 white">A £11bn Problem. A 5.5M Business Market. Zero Direct Competition.</h2>
+      <div class="section-divider divider-green"></div>
+      <p class="para-dark" style="max-width:700px;margin-bottom:40px;">The UK presents a structurally persistent market opportunity for Case Flow. With 5.45 million micro and small businesses accounting for 99.2% of all UK businesses, and late payments costing the economy almost £11 billion per year, the demand for structured dispute resolution tooling is both urgent and underserved by any existing SME software category.</p>
+
+      <div class="market-kpi">
+        <div class="mkt-card">
+          <div class="mkt-num">£26bn</div>
+          <div class="mkt-lbl">Estimated total late payments owed to UK businesses at any given time  averaging £17,000 per affected business</div>
+          <div class="mkt-source">Small Business Commissioner</div>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-num">1.5M+</div>
+          <div class="mkt-lbl">UK businesses affected by late payments each year  28% of all active businesses in the UK economy</div>
+          <div class="mkt-source">Small Business Commissioner 2024</div>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-num">133M hrs</div>
+          <div class="mkt-lbl">Staff hours lost annually across the UK economy chasing late payments  86 hours per affected business per year</div>
+          <div class="mkt-source">Gov. Consultation 2024</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">UK SME Late Payment by Sector</div>
+          <div class="chart-sub">Percentage of businesses experiencing late payments by industry</div>
+          <div class="chart-wrap"><canvas id="chartSector"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Root Causes of Invoice Disputes</div>
+          <div class="chart-sub">Primary reasons for overdue payments reported by UK SMEs</div>
+          <div class="chart-wrap"><canvas id="chartRootCause"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card-full">
+        <div class="chart-title">Competitive Positioning  UK Dispute Resolution Landscape</div>
+        <div class="chart-sub">Case Flow vs. existing platform categories across key capability dimensions</div>
+        <div class="chart-wrap-lg"><canvas id="chartRadar"></canvas></div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">UK Legal-Tech & SME SaaS Market Growth</div>
+          <div class="chart-sub">Market expansion trajectory in adjacent categories (USD Billion)</div>
+          <div class="chart-wrap"><canvas id="chartGrowth"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Case Flow vs Competitors  Capability Score</div>
+          <div class="chart-sub">Feature coverage comparison across dispute workflow dimensions</div>
+          <div class="chart-wrap"><canvas id="chartPerf"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page market -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PRICING
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-pricing">
+  <section style="background:var(--bg-black);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,100px);">
+    <div class="container">
+      <div class="label-tag">Pricing Plans</div>
+      <h2 class="section-h2 green">Professional Dispute Resolution at SME-Friendly Pricing</h2>
+      <div class="section-divider divider-green"></div>
+      <p class="para-dark" style="max-width:640px;margin-bottom:48px;">Three subscription tiers designed to grow with your dispute complexity and team size. All plans include the full Case Flow evidence workflow, dispute taxonomy engine, and audit-ready resolution pack generator. No legal expertise required. No expensive legal retainers needed.</p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Starter Plan</div>
+          <h3>Essential</h3>
+          <p class="desc">For micro and small SMEs managing occasional invoice disputes wanting a structured alternative to email chasing.</p>
+          <span class="price-amount">£59</span>
+          <div class="price-period">/ MONTH · BILLED MONTHLY</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span> Dispute case creation & management</li>
+            <li><span class="chk">✓</span> Document upload & CSV import</li>
+            <li><span class="chk">✓</span> Root-cause taxonomy classification</li>
+            <li><span class="chk">✓</span> Basic evidence checklist tracking</li>
+            <li><span class="chk">✓</span> Resolution pack export (PDF)</li>
+            <li><span class="chk">✓</span> Manual review workflow</li>
+            <li><span class="chk">✓</span> 3 platform users</li>
+          </ul>
+          <button class="price-btn price-btn-outline" onclick="showPage('contact')">Get Started</button>
+        </div>
+
+        <div class="price-card featured">
+          <div class="price-tier">Growth Plan</div>
+          <h3>Professional</h3>
+          <p class="desc">For established SMEs with regular B2B disputes requiring full evidence graph modelling and prevention controls.</p>
+          <span class="price-amount">£149</span>
+          <div class="price-period">/ MONTH · BILLED MONTHLY</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span> Full claim-level provenance spine</li>
+            <li><span class="chk">✓</span> Evidence sufficiency scoring</li>
+            <li><span class="chk">✓</span> Chronological timeline builder</li>
+            <li><span class="chk">✓</span> Contradiction detection & flagging</li>
+            <li><span class="chk">✓</span> Advanced resolution pack templates</li>
+            <li><span class="chk">✓</span> Dispute-to-control prevention engine</li>
+            <li><span class="chk">✓</span> 10 platform users</li>
+          </ul>
+          <button class="price-btn price-btn-green" onclick="showPage('contact')">Start Free Pilot</button>
+        </div>
+
+        <div class="price-card">
+          <div class="price-tier">Professional Plan</div>
+          <h3>Enterprise</h3>
+          <p class="desc">For high-dispute SMEs and accountancy practices managing disputes across multiple client portfolios.</p>
+          <span class="price-amount">£299</span>
+          <div class="price-period">/ MONTH · CUSTOM PRICING</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span> Multi-entity dispute management</li>
+            <li><span class="chk">✓</span> Accountant client portal access</li>
+            <li><span class="chk">✓</span> Advanced analytics dashboards</li>
+            <li><span class="chk">✓</span> Accounting software connectors</li>
+            <li><span class="chk">✓</span> White-label resolution templates</li>
+            <li><span class="chk">✓</span> Dedicated onboarding support</li>
+            <li><span class="chk">✓</span> Unlimited users + SSO</li>
+          </ul>
+          <button class="price-btn price-btn-outline" onclick="showPage('contact')">Contact Sales</button>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="label-tag">FAQ</div>
+      <h3 style="font-family:var(--display);color:var(--green);font-size:clamp(22px,3vw,30px);font-weight:800;margin-bottom:28px;letter-spacing:-0.3px;">Common Questions</h3>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>Do I need legal expertise to use Case Flow?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">No. Case Flow is specifically designed for finance managers, operations leads, and business owners without legal training. The workflow-guided interface with evidence checklists and legal-safe templates means you can build a professional-grade dispute pack without inadvertently providing legal advice. Our design principle: a finance team member should be able to manage a complex invoice dispute without external legal consultation at the pre-escalation stage.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>How is Case Flow different from Xero, QuickBooks, or Chaser?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">Accounting software like Xero and QuickBooks tracks transactions  they don't manage disputes. Chaser automates payment reminders assuming invoices are valid  it cannot reconstruct a contested transaction. Case Flow operates in an entirely different category: we model the evidence behind a dispute, build claim-provenance relationships, score evidence completeness, and generate commercial resolution packs. We are the operating system for the dispute workflow that sits between accounting software and legal escalation.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>Will Case Flow provide legal advice or act as a legal service?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">No. Case Flow is explicitly designed as an operational documentation tool, not a legal service. Our templates enforce factual documentation over interpretation, built-in disclaimers prevent advisory language, and the system is architected to create "legal-safe" outputs. The platform organises facts and evidence  it does not predict legal outcomes, assess legal merit, or act as a substitute for solicitor advice when formal legal proceedings are required. This is a foundational design principle, not a caveat.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>How does the Prevention Engine reduce future disputes?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">Once a dispute is closed in Case Flow, the system analyses the root cause and evidence gaps identified during the case. These are converted into specific operational controls  for example, "require signed delivery confirmation before generating invoice" or "mandate purchase order reference on all orders above £500." Over time, the dispute history creates a library of preventive controls that systematically reduce the internal process failures that generate disputes in the first place.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>Can I trial Case Flow before committing to a subscription?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">Yes  Case Flow is currently recruiting 5–8 UK SME pilot partners for a structured 12-week validation programme at discounted or pilot-access pricing. Participants receive full platform access, founder-led onboarding support, and direct input into the product roadmap. We're targeting businesses with 10–80 employees managing at least 3–10 B2B disputes per quarter. Contact us to apply for a pilot partnership position.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page pricing -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: CONTACT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <section style="background:var(--bg-black);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,100px);">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <div class="label-tag">Get In Touch</div>
+          <h2 class="section-h2 green">Join the Case Flow Pilot Programme</h2>
+          <div class="section-divider divider-green"></div>
+          <p class="contact-left-para">Case Flow is currently recruiting 5–8 UK SME pilot partners for a structured 12-week validation programme. We're targeting finance managers, operations directors, and business owners at companies with 10–80 employees who regularly manage B2B invoice disputes  particularly in wholesale, professional services, and import/export sectors.</p>
+          <p class="contact-left-para" style="margin-bottom:28px;">Get in touch to schedule a live platform walkthrough and discuss how Case Flow can transform your dispute management from reactive email chasing into a professional, evidence-led workflow  at a fraction of the cost of legal consultation or manual administration.</p>
+
+          <div class="contact-item">
+            <div class="contact-icon">🌐</div>
+            <div class="contact-item-text"><strong>Website</strong><span>caseflow.co.uk</span></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div class="contact-item-text"><strong>Location</strong><span>Manchester, United Kingdom</span></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🛡️</div>
+            <div class="contact-item-text"><strong>Data Infrastructure</strong><span>UK Cloud Hosting · UK Data Sovereignty</span></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📋</div>
+            <div class="contact-item-text"><strong>IP Protection</strong><span>Copyright · Trade Secrets · Trademark Registered</span></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">✅</div>
+            <div class="contact-item-text"><strong>Compliance</strong><span>UK GDPR · Legal-Safe Architecture · Non-Advisory Templates</span></div>
+          </div>
+        </div>
+
+        <form class="contact-form-card" onsubmit="handleSubmit(event)">
+          <h3>Book a Demo</h3>
+
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-ctrl" placeholder="Your name" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Business Name</label>
+            <input type="text" name="business" class="form-ctrl" placeholder="Your business" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-ctrl" placeholder="your@business.co.uk" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Business Sector</label>
+            <select name="sector" class="form-ctrl" required>
+              <option value="">Select your sector</option>
+              <option>Wholesale / Trade Goods</option>
+              <option>Professional Services</option>
+              <option>Import / Export</option>
+              <option>Construction / Contracting</option>
+              <option>Accountancy Practice</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Monthly Dispute Volume</label>
+            <select name="volume" class="form-ctrl" required>
+              <option value="">Select volume</option>
+              <option>1–3 disputes per month</option>
+              <option>3–10 disputes per month</option>
+              <option>10–30 disputes per month</option>
+              <option>30+ disputes per month</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Current Dispute Challenge</label>
+            <textarea name="message" class="form-ctrl ta" required
+              placeholder="Evidence fragmentation, slow resolution, payment recovery, relationship damage, or administration overload..."></textarea>
+          </div>
+
+          <button class="form-submit" type="submit">
+            Submit Demo Request →
+          </button>
+          <div id="formSuccess">✓ Thank you! We'll be in touch within 24 hours to arrange your demo.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div><!-- end page contact -->
+
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-logo">Case Flow</span>
+        <p>The UK's first B2B invoice dispute resolution SaaS platform  transforming fragmented commercial records into structured, audit-ready evidence packs using a proprietary Claim-Level Provenance Spine, Root-Cause Taxonomy Engine, and Evidence Sufficiency Scoring to help UK SMEs resolve disputes faster, recover payments professionally, and prevent recurring operational failures.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <a onclick="showPage('platform')">Evidence Ingestion Engine</a>
+        <a onclick="showPage('platform')">Provenance Spine</a>
+        <a onclick="showPage('platform')">Sufficiency Scoring</a>
+        <a onclick="showPage('platform')">Prevention Controls</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a onclick="showPage('about')">About Case Flow</a>
+        <a onclick="showPage('market')">Market Analysis</a>
+        <a onclick="showPage('pricing')">Pricing &amp; Plans</a>
+        <a onclick="showPage('contact')">Book a Demo</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 <span>Case Flow</span> · Manchester, UK · UK GDPR Compliant · Legal-Safe Architecture · Non-Advisory Platform</p>
+      <p><span>caseflow.co.uk</span> · Innovator Founder Visa Application · Strictly Confidential</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+/* ─── PAGE NAV ───────────────────────────────── */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){pg.classList.add('active');}
+  const btn=document.getElementById('nav-'+name);
+  if(btn){btn.classList.add('active');}
+  window.scrollTo({top:0,behavior:'instant'});
+  if(name==='market'&&!window.marketChartsLoaded){initMarketCharts();window.marketChartsLoaded=true;}
+}
+
+function toggleCard(btn){
+  const card=btn.closest('.platform-card');
+  const isOpen=card.classList.contains('open');
+  document.querySelectorAll('.platform-card').forEach(c=>{
+    c.classList.remove('open');
+    const eb=c.querySelector('.expand-btn');
+    if(eb){eb.textContent=eb.textContent.includes('Expand')?'Expand ↓':'Learn More ↓';}
+  });
+  if(!isOpen){
+    card.classList.add('open');
+    btn.textContent=btn.textContent.includes('Expand')?'Collapse ↑':'Show Less ↑';
+  }
+}
+
+function toggleFAQ(el){
+  el.parentElement.classList.toggle('open');
+}
+
+function closeMobile(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+
+function handleSubmit(e){
+  e.preventDefault();
+  document.getElementById('formSuccess').style.display='block';
+}
+
+/* ─── CHART THEME ────────────────────────────── */
+const GREEN='rgba(46,204,113,1)';
+const GREEN2='rgba(46,204,113,0.75)';
+const GREEN3='rgba(46,204,113,0.4)';
+const BLUE='rgba(26,86,176,0.9)';
+const BLUE2='rgba(74,142,232,0.7)';
+const GRID='rgba(255,255,255,0.05)';
+const MUTED='rgba(138,181,208,0.75)';
+
+Chart.defaults.font.family="'IBM Plex Mono', monospace";
+Chart.defaults.font.size=11;
+Chart.defaults.color=MUTED;
+
+/* ─── MARKET CHARTS ──────────────────────────── */
+function initMarketCharts(){
+  // Sector Late Payments
+  new Chart(document.getElementById('chartSector').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Insurance','Professional Svcs','Wholesale/Trade','Construction','Manufacturing','Retail/Goods'],
+      datasets:[{
+        label:'% with Late Payments',
+        data:[21,19,18,16,15,11],
+        backgroundColor:[GREEN,GREEN2,GREEN3,'rgba(46,204,113,0.25)','rgba(26,86,176,0.6)','rgba(26,86,176,0.4)'],
+        borderRadius:5,barPercentage:0.6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+'%'}},y:{grid:{display:false},ticks:{color:MUTED,font:{size:10}}}}}
+  });
+
+  // Root Cause
+  new Chart(document.getElementById('chartRootCause').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:['Admin Errors (36%)','Unclear Invoices (31%)','Tech Failures (23%)','Intentional Delay (18%)','Chain Effect (40%)'],
+      datasets:[{
+        data:[36,31,23,18,40],
+        backgroundColor:[GREEN,'rgba(46,204,113,0.7)',GREEN3,'rgba(26,86,176,0.65)','rgba(74,142,232,0.5)'],
+        borderColor:['rgba(46,204,113,0.9)','rgba(46,204,113,0.7)','rgba(46,204,113,0.45)','rgba(26,86,176,0.7)','rgba(74,142,232,0.55)'],
+        borderWidth:1.5
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:10,font:{size:10}}}}}
+  });
+
+  // Radar Competitive
+  new Chart(document.getElementById('chartRadar').getContext('2d'),{
+    type:'radar',
+    data:{
+      labels:['Evidence Structuring','Claim-Level Provenance','Sufficiency Scoring','Timeline Reconstruction','Audit-Ready Output','Prevention Controls'],
+      datasets:[
+        {label:'Case Flow',data:[5,5,5,5,5,5],backgroundColor:'rgba(46,204,113,0.12)',borderColor:GREEN,borderWidth:2,pointBackgroundColor:GREEN},
+        {label:'Chaser (Credit Control)',data:[1,1,1,1,1,1],backgroundColor:'rgba(26,86,176,0.07)',borderColor:BLUE2,borderWidth:1.5,pointBackgroundColor:BLUE2},
+        {label:'Xero / QuickBooks',data:[2,1,1,1,1,1],backgroundColor:'rgba(100,180,255,0.06)',borderColor:'rgba(100,180,255,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(100,180,255,0.5)'},
+        {label:'HighRadius (Enterprise AR)',data:[1,2,1,3,2,2],backgroundColor:'rgba(120,210,120,0.06)',borderColor:'rgba(120,210,120,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(120,210,120,0.5)'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{r:{backgroundColor:'rgba(46,204,113,0.01)',grid:{color:GRID},pointLabels:{color:MUTED,font:{size:10}},ticks:{display:false},min:0,max:5}}}
+  });
+
+  // Market Growth
+  new Chart(document.getElementById('chartGrowth').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['2022','2023','2024','2025','2026','2027','2028','2030'],
+      datasets:[
+        {label:'Global Legal-Tech Market (USD B)',data:[28,33,39,46,54,63,73,92],backgroundColor:'rgba(26,86,176,0.65)',borderRadius:5,barPercentage:0.55},
+        {type:'line',label:'UK SME SaaS Adoption %',data:[null,14,17,21,25,29,33,42],borderColor:GREEN,borderWidth:2,yAxisID:'y2',tension:0.4,pointBackgroundColor:GREEN,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:12,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'$'+v+'B'}},y2:{position:'right',grid:{display:false},ticks:{color:MUTED,callback:v=>v+'%'}}}}
+  });
+
+  // Performance Comparison
+  new Chart(document.getElementById('chartPerf').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Evidence Structuring','Claim Provenance','Sufficiency Score','Timeline Build','Audit Output','Prevention'],
+      datasets:[
+        {label:'Case Flow',data:[98,98,95,95,92,95],backgroundColor:GREEN2,borderRadius:5,barPercentage:0.35},
+        {label:'Existing SME Tools Avg',data:[10,5,5,10,15,5],backgroundColor:BLUE2,borderRadius:5,barPercentage:0.35}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,font:{size:9}}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+' pts'}}}}
+  });
+}
+</script>
+</body>
+</html>
