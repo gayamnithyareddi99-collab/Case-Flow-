@@ -1018,7 +1018,7 @@ footer{background:var(--bg-black);border-top:1px solid rgba(46,204,113,0.1);padd
   </button>
 </div>
 
-          <<div class="founder-card">
+          <div class="founder-card">
   <div class="founder-tag">Growing the Team · Phase 2</div>
   <h4>Strategic UK Hires</h4>
   <div class="founder-title">Capability-Based Recruitment Plan</div>
@@ -1327,7 +1327,6 @@ footer{background:var(--bg-black);border-top:1px solid rgba(46,204,113,0.1);padd
   </section>
 </div><!-- end page pricing -->
 
-
 <!-- ═══════════════════════════════════════════
      PAGE: CONTACT
 ═══════════════════════════════════════════════ -->
@@ -1335,37 +1334,61 @@ footer{background:var(--bg-black);border-top:1px solid rgba(46,204,113,0.1);padd
   <section style="background:var(--bg-black);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,100px);">
     <div class="container">
       <div class="contact-grid">
+
+        <!-- LEFT CONTENT -->
         <div>
           <div class="label-tag">Get In Touch</div>
           <h2 class="section-h2 green">Join the Case Flow Pilot Programme</h2>
           <div class="section-divider divider-green"></div>
-          <p class="contact-left-para">Case Flow is currently recruiting 5–8 UK SME pilot partners for a structured 12-week validation programme. We're targeting finance managers, operations directors, and business owners at companies with 10–80 employees who regularly manage B2B invoice disputes  particularly in wholesale, professional services, and import/export sectors.</p>
-          <p class="contact-left-para" style="margin-bottom:28px;">Get in touch to schedule a live platform walkthrough and discuss how Case Flow can transform your dispute management from reactive email chasing into a professional, evidence-led workflow  at a fraction of the cost of legal consultation or manual administration.</p>
+
+          <p class="contact-left-para">
+            Case Flow is currently recruiting 5–8 UK SME pilot partners for a structured 12-week validation programme. We're targeting finance managers, operations directors, and business owners at companies with 10–80 employees who regularly manage B2B invoice disputes particularly in wholesale, professional services, and import/export sectors.
+          </p>
+
+          <p class="contact-left-para" style="margin-bottom:28px;">
+            Get in touch to schedule a live platform walkthrough and discuss how Case Flow can transform your dispute management from reactive email chasing into a professional, evidence-led workflow at a fraction of the cost of legal consultation or manual administration.
+          </p>
 
           <div class="contact-item">
             <div class="contact-icon">🌐</div>
             <div class="contact-item-text"><strong>Website</strong><span>caseflow.co.uk</span></div>
           </div>
+
           <div class="contact-item">
             <div class="contact-icon">📍</div>
             <div class="contact-item-text"><strong>Location</strong><span>Manchester, United Kingdom</span></div>
           </div>
+
           <div class="contact-item">
             <div class="contact-icon">🛡️</div>
             <div class="contact-item-text"><strong>Data Infrastructure</strong><span>UK Cloud Hosting · UK Data Sovereignty</span></div>
           </div>
+
           <div class="contact-item">
             <div class="contact-icon">📋</div>
             <div class="contact-item-text"><strong>IP Protection</strong><span>Copyright · Trade Secrets · Trademark Registered</span></div>
           </div>
+
           <div class="contact-item">
             <div class="contact-icon">✅</div>
             <div class="contact-item-text"><strong>Compliance</strong><span>UK GDPR · Legal-Safe Architecture · Non-Advisory Templates</span></div>
           </div>
         </div>
 
-        <form class="contact-form-card" onsubmit="handleSubmit(event)">
+        <!-- FORM -->
+        <form class="contact-form-card"
+              action="https://api.web3forms.com/submit"
+              method="POST">
+
           <h3>Book a Demo</h3>
+
+          <!-- 🔑 ACCESS KEY -->
+          <input type="hidden" name="access_key" value="679bb3e5-f979-43e5-8b92-df59dd052bfd">
+
+          <!-- OPTIONAL SETTINGS -->
+          <input type="hidden" name="subject" value="New Demo Request - Case Flow">
+          <input type="hidden" name="from_name" value="Case Flow Website">
+          <input type="hidden" name="redirect" value="">
 
           <div class="form-group">
             <label class="form-label">Full Name</label>
@@ -1412,15 +1435,22 @@ footer{background:var(--bg-black);border-top:1px solid rgba(46,204,113,0.1);padd
               placeholder="Evidence fragmentation, slow resolution, payment recovery, relationship damage, or administration overload..."></textarea>
           </div>
 
+          <!-- SUBMIT -->
           <button class="form-submit" type="submit">
             Submit Demo Request →
           </button>
-          <div id="formSuccess">✓ Thank you! We'll be in touch within 24 hours to arrange your demo.</div>
+
+          <!-- SUCCESS MESSAGE -->
+          <div id="formSuccess" style="display:none;margin-top:16px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.3);border-radius:8px;padding:14px;color:var(--green);font-size:13px;text-align:center;font-family:var(--mono);">
+            ✓ Thank you! We'll be in touch within 24 hours.
+          </div>
+
         </form>
+
       </div>
     </div>
   </section>
-</div><!-- end page contact -->
+</div>
 
 
 <!-- ═══════════ FOOTER ═══════════ -->
